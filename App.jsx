@@ -1,16 +1,28 @@
-import { StatusBar } from 'expo-status-bar';
+
 import { StyleSheet, Text, View,} from 'react-native';
 import Home from './src/screens/Home';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import DetailPoke from './src/screens/DetailPoke';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar translucent={true} backgroundColor={'transparent'} barStyle="dark-content" />
-     <Home/>
-    </SafeAreaView>
+   <NavigationContainer>
+       <Stack.Navigator
+          screenOptions={({ route }) => ({
+            headerShown: false,
+         
+          })}
+          // 
+          
+       >
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="DetailPoke" component={DetailPoke} />
+      </Stack.Navigator>
+   </NavigationContainer>
   );
 }
 
