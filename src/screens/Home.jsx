@@ -7,10 +7,14 @@ import Data from '../components/Dummy'
 import Pokemon from '../components/Pokemon'
 import {SafeAreaView} from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { useRoute, useIsFocused } from '@react-navigation/native';
 
-export default function Home() {
+export default function Home({navigation,}) {
   // receive navigation props from Pokemon.jsx
-  const navigation = useNavigation()
+  const route = useRoute();
+  // const { id, name, image, type,} = route.params;
+
+
 
 
 

@@ -2,6 +2,7 @@
 import { StyleSheet, Text, View,} from 'react-native';
 import Home from './src/screens/Home';
 import DetailPoke from './src/screens/DetailPoke';
+import LikedPokemon from './src/screens/LikedPokemon';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -21,6 +22,9 @@ export default function App() {
        >
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="DetailPoke" component={DetailPoke} />
+        <Stack.Screen name="LikedPokemon" component={LikedPokemon} 
+                 
+        />
       </Stack.Navigator>
    </NavigationContainer>
   );

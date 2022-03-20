@@ -1,8 +1,10 @@
 import { View, Text, TouchableOpacity} from 'react-native'
 import React,{useEffect, useState} from 'react'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import {useNavigation} from '@react-navigation/native'
 
 function Header(){
+  const navigation = useNavigation();
   return (
     <View style={{ marginHorizontal : 20, justifyContent: 'center',
       flexDirection : 'row', justifyContent: 'space-between',   
@@ -13,7 +15,9 @@ function Header(){
       <Text style={{ fontSize: 25, letterSpacing: 1.8, fontWeight:'500'}}>Who's that </Text>
       <Text style={{ fontSize: 30, fontWeight: 'bold', letterSpacing : 2.5}}>Pokémon !</Text>
       </View>
-      <TouchableOpacity style={{
+      <TouchableOpacity 
+      onPress={() => navigation.navigate('LikedPokemon')}      
+      style={{
         alignItems : 'center',
       }}>
       <MaterialCommunityIcons name="pokeball" size={40} color="#1a1b17" style={{ 

@@ -8,10 +8,10 @@ import { useNavigation } from '@react-navigation/native';
 
 
 
-const Pokemon = () => {
+const Pokemon = ({navigation}) => {
     // console.log(props.navigate)
     //navigation
-    const navigation = useNavigation();
+    // const navigation = useNavigation();
     // generate search filter
     const [search, setSearch] = useState('');
     // flatlist filter
@@ -29,29 +29,12 @@ const Pokemon = () => {
             type: null,
             height: null,
             weight: null,
-            abilities: null,
-            stats: null,
-            description: null,
             isTouching: false
         }
     );
-    // navigation to details pokemon screens
-    const navigateToDetail = (id, name, image, type, height, weight, abilities, stats, description) => {
-        navigation.navigate('DetailPoke', {
-            id: id,
-            name: name,
-            image: image,
-            type: type,
-            height: height,
-            weight: weight,
-            abilities: abilities,
-            stats: stats,
-            description: description
-        })
-    }
     // fetch data from API
     const getPokemon = async () => {
-        const res = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=15&offset=15');  
+        const res = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=10&offset=10');  
     // loop to get result from API using foreach     
         res.data.results.forEach( async (poke) => {
             const pokemon = await axios.get(`https://pokeapi.co/api/v2/pokemon/${poke.name}`);
@@ -82,85 +65,34 @@ const Pokemon = () => {
     // load more pokemon function
     const loadMorePokemon = async () => {
         setLoading(true);
-        const res = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=25&offset=25');
+        const res = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=10&offset=10');
         res.data.results.forEach( async (poke) => {
             const pokemon = await axios.get(`https://pokeapi.co/api/v2/pokemon/${poke.name}`);
             setPokemons(pokemons => [...pokemons, pokemon.data]);
             setLoading(false);
         });
     }
+    // navigation to details pokemon screens
+     const navigateToDetail = (id, name, image, type, height, weight,abilities, stats, description) => { navigation.navigate('DetailPoke', {
+            id: id,
+            name: name,
+            type: type,
+            height: height,
+            weight: weight,
+            image: image,
+            abilities :abilities,
+            stats :stats,
+            // description :description,
 
-    // // load more pokemon
-    // const onEndReached = () => {
-    //     loadMorePokemon();
-    // }
-    // onTouch pokemon
-    // const onTouchPokemon = (pokemon) => {
-    //     setTouching({
-    //         id: pokemon.id,
-    //         name: pokemon.name,
-    //         image: pokemon.sprites.front_default,
-    //         type: pokemon.types.map(type => type.type.name),
-    //         height: pokemon.height,
-    //         weight: pokemon.weight,
-    //         abilities: pokemon.abilities.map(ability => ability.ability.name),
-    //         stats: pokemon.stats.map(stat => stat.base_stat),
-    //         description: pokemon.species.flavor_text_entries.filter(flavor => flavor.language.name === 'en')[0].flavor_text,
-    //         isTouching: true
-    //     });
-    // }
-    // onRelease pokemon
-    // const onReleasePokemon = () => {
-    //     setTouching({
-    //         id: null,
-    //         name: null,
-    //         image: null,
-    //         type: null,
-    //         height: null,
-    //         weight: null,
-    //         abilities: null,
-    //         stats: null,
-    //         description: null,
-    //         isTouching: false
-    //     });
-    // }
-
+        })
+    }
       // render each pokemon use flatlist
-     
       const renderItem = ({ item,index }) => {    
         return (
             <TouchableOpacity 
             onPress={() => {
-                navigateToDetail(item.id, item.name, item.url, item.type, item.height, item.weight, item.abilities, item.stats, item.description)
+                navigateToDetail(item.id, item.name, item.sprites.front_default, item.types.map(type => type.type.name), item.height, item.weight, item.abilities.map(ability => ability.ability.name), item.stats.map(stat => stat.base_stat), )
             }}
-            onLongPress={() => {
-                setTouching({
-                    id: item.id,
-                    name: item.name,
-                    image: item.url,
-                    type: item.type,
-                    height: item.height,
-                    weight: item.weight,
-                    abilities: item.abilities,
-                    stats: item.stats,
-                    description: item.description,
-                    isTouching: true
-                })
-            }}
-            onPressOut={() => {
-                setTouching({
-                    id: null,
-                    name: null,
-                    image: null,
-                    type: null,
-                    height: null,
-                    weight: null,
-                    abilities: null,
-                    stats: null,
-                    description: null,
-                    isTouching: false
-                })
-            }}             
             style={{
                 backgroundColor: '#FBF8F1',
                 paddingHorizontal: 10,
@@ -191,7 +123,6 @@ const Pokemon = () => {
             // marginLeft : 18,  
         }}>
             {/* Search pokemon */}
-            {/* <Recommended onFilterPokemon={filterPokemon}/> */}
             <View 
             style={{
                 backgroundColor: '#fff',
@@ -256,7 +187,8 @@ const Pokemon = () => {
                         backgroundColor: loading ? '#F4BBBB' : '#4D77FF',
                         paddingHorizontal: 10,
                         paddingVertical: 10,
-                        margin: 20,
+                        marginVertical: 15,
+                        marginHorizontal : 15,
                         borderRadius: 25,
                         alignItems: 'center',
                         elevation: 2,
@@ -264,7 +196,7 @@ const Pokemon = () => {
                         width: 160,
                         justifyContent: 'center',
                         position: 'absolute',
-                        bottom: 0,
+                        bottom: -15,
                         right: 0,
                     }}>
                     <Text style={{
