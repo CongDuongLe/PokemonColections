@@ -20,26 +20,15 @@ const Pokemon = ({navigation}) => {
     const [pokemons, setPokemons] = useState([]);
     // state loading pokemon
     const [loading, setLoading] = useState(true);
-    // state Touching pokemon
-    const [touching, setTouching] = useState(
-        {
-            id: null,
-            name: null,
-            image: null,
-            type: null,
-            height: null,
-            weight: null,
-            isTouching: false
-        }
-    );
-    // fetch data from API
+    // fetch data get Pokemon List from API
     const getPokemon = async () => {
-        const res = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=10&offset=10');  
+        const res = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=20');
+        
     // loop to get result from API using foreach     
         res.data.results.forEach( async (poke) => {
             const pokemon = await axios.get(`https://pokeapi.co/api/v2/pokemon/${poke.name}`);
-            // set state for each pokemon
             setPokemons(pokemons => [...pokemons, pokemon.data]);
+            // set state for each pokemon
             setLoading(false);
             });   
     }
@@ -65,7 +54,7 @@ const Pokemon = ({navigation}) => {
     // load more pokemon function
     const loadMorePokemon = async () => {
         setLoading(true);
-        const res = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=10&offset=10');
+        const res = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=15');
         res.data.results.forEach( async (poke) => {
             const pokemon = await axios.get(`https://pokeapi.co/api/v2/pokemon/${poke.name}`);
             setPokemons(pokemons => [...pokemons, pokemon.data]);
@@ -73,16 +62,15 @@ const Pokemon = ({navigation}) => {
         });
     }
     // navigation to details pokemon screens
-     const navigateToDetail = (id, name, image, type, height, weight,abilities, stats, description) => { navigation.navigate('DetailPoke', {
-            id: id,
-            name: name,
-            type: type,
-            height: height,
-            weight: weight,
-            image: image,
-            abilities :abilities,
-            stats :stats,
-            // description :description,
+     const navigateToDetail = (id, name, image, type, height, weight,abilities, stats) => { navigation.navigate('DetailPoke', {
+         id: id,
+         name: name,
+         image: image,
+         type: type,
+         height:height,
+         weight: weight,
+         abilities: abilities,
+         stats: stats
 
         })
     }
@@ -91,7 +79,7 @@ const Pokemon = ({navigation}) => {
         return (
             <TouchableOpacity 
             onPress={() => {
-                navigateToDetail(item.id, item.name, item.sprites.front_default, item.types.map(type => type.type.name), item.height, item.weight, item.abilities.map(ability => ability.ability.name), item.stats.map(stat => stat.base_stat), )
+                navigateToDetail(item.id, item.name, item.sprites.other['official-artwork'].front_default, item.types.map(type => type.type.name), item.height, item.weight, item.abilities.map(ability => ability.ability.name), item.stats)
             }}
             style={{
                 backgroundColor: '#FBF8F1',
@@ -106,8 +94,9 @@ const Pokemon = ({navigation}) => {
                 justifyContent : 'center',
             }}>
                <Image source={{
-                    uri: item.sprites.front_default
-               }} style={{ width: 110, height: 110,  }} />
+                    uri: item.sprites.other['official-artwork'].front_default,
+                    // uri : item.sprites.other.dream_worlds.front_default
+               }} style={{ width: 100, height: 100,  }} />
                 <Text style={{
                     fontSize: 18,
                     color: '#1a1b17',
