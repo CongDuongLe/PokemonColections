@@ -17,6 +17,7 @@ const LikedPokemon = () => {
   const { id, name, image, type, height, weight,abilities, stats} = route.params || {};
   const [lstPokemon, setLstPokemon] = useState([]);
   const [isFavorite, setIsFavorite] = useState(false);
+
   // async storage favorite pokemons
   const getFavoritePoke = async () => {
     try {
@@ -36,6 +37,47 @@ const LikedPokemon = () => {
   useEffect(() => {
     getFavoritePoke();
   }, []);
+
+  const addFavoritePoke = async () => {
+    try {
+      const value = await AsyncStorage.getItem('favoritePokemons');
+      if (value) {
+        const favoritePokemons = JSON.parse(value);
+        const isFavorite = favoritePokemons.find(pokemon => pokemon.id === id);
+        if (!isFavorite) {
+          favoritePokemons.push({
+            id,
+            name,
+            image,
+            type,
+            height,
+            weight,
+            abilities,
+            stats : [...stats]
+          });
+          await AsyncStorage.setItem('favoritePokemons', JSON.stringify(favoritePokemons));
+          setIsFavorite(true);
+        }
+      } else {
+        const favoritePokemons = [{
+          id,
+          name,
+          image,
+          type,
+          height,
+          weight,
+          abilities,
+          stats : [...stats]
+        }];
+        await AsyncStorage.setItem('favoritePokemons', JSON.stringify(favoritePokemons));
+        setIsFavorite(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
+
   // delete favorite pokemon
   const deleteFavoritePoke = async (id) => {
     try {
@@ -67,10 +109,10 @@ const LikedPokemon = () => {
       type : type,
       height: height,
       weight: weight,
+      abilities: abilities,
+      stats : [...stats]
     });
   };
-
-
   // Main Here
   return (
     <SafeAreaView style={{
@@ -83,10 +125,20 @@ const LikedPokemon = () => {
       }
         style={{
           paddingHorizontal: 10,
-          paddingBottom: 10
+          paddingBottom: 10,
+          marginTop:10, 
+          flexDirection: 'row',
+          alignItems: 'center',
         }}
       >
         <Ionicons name="ios-arrow-back" size={30} color="#000" />
+        <Text style={{ 
+          fontSize: 20,
+          fontWeight: 'bold',
+          marginLeft: '22%',
+          color: '#000',
+          letterSpacing: 2,
+        }}>Liked Pokemon </Text>
       </TouchableOpacity>
       {/* check if have pokemon like then show flatlist or show empty  */}
       {lstPokemon.length > 0 ? (
@@ -98,7 +150,9 @@ const LikedPokemon = () => {
           renderItem={({ item }) => (
             <TouchableOpacity
               // Navigator.navigate(routeName, params)
-              onPress={() => navigateToDetail(item.id, item.name, item.image, item.type, item.height, item.weight)}
+              onPress={() => navigateToDetail(item.id, item.name, item.image, item.type, item.height, item.weight, item.abilities, item.stats)
+              }
+              
               style={{
                 flex: 1,
                 flexDirection: 'row',
@@ -112,13 +166,15 @@ const LikedPokemon = () => {
                 flex: 1,
                 flexDirection: 'row',
                 justifyContent: 'center',
-                alignItems: 'center'
+                alignItems: 'center',
+                paddingVertical :8,
+
               }}>
                 <Image
                   style={{
                     flex: 2 / 7,
-                    width: 100,
-                    height: 100,
+                    width: 90,
+                    height: 90,
                   }}
                   source={{ uri: item.image }}
                 />

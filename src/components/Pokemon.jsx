@@ -22,7 +22,7 @@ const Pokemon = ({navigation}) => {
     const [loading, setLoading] = useState(true);
     // fetch data get Pokemon List from API
     const getPokemon = async () => {
-        const res = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=20');
+        const res = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=16&offset=0');
         
     // loop to get result from API using foreach     
         res.data.results.forEach( async (poke) => {
@@ -54,7 +54,7 @@ const Pokemon = ({navigation}) => {
     // load more pokemon function
     const loadMorePokemon = async () => {
         setLoading(true);
-        const res = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=15');
+        const res = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=16&offset=16');
         res.data.results.forEach( async (poke) => {
             const pokemon = await axios.get(`https://pokeapi.co/api/v2/pokemon/${poke.name}`);
             setPokemons(pokemons => [...pokemons, pokemon.data]);
@@ -95,7 +95,6 @@ const Pokemon = ({navigation}) => {
             }}>
                <Image source={{
                     uri: item.sprites.other['official-artwork'].front_default,
-                    // uri : item.sprites.other.dream_worlds.front_default
                }} style={{ width: 100, height: 100,  }} />
                 <Text style={{
                     fontSize: 18,

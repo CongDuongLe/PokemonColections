@@ -40,10 +40,7 @@ const DetailPoke = (params) => {
                         height,
                         weight,
                         abilities,
-                        stats : stats.map(stat => ({
-                            name: stat.stat.name,
-                            base_stat: stat.base_stat
-                        }))
+                        stats : [...stats]
                     });
                     await AsyncStorage.setItem('favoritePokemons', JSON.stringify(favoritePokemons));
                     setIsFavorite(true);
@@ -57,10 +54,7 @@ const DetailPoke = (params) => {
                     height,
                     weight,
                     abilities,
-                    stats : stats.map(stat => ({
-                      name: stat.stat.name,
-                      base_stat: stat.base_stat
-                  }))
+                    stats : [...stats]
                 }];
                 await AsyncStorage.setItem('favoritePokemons', JSON.stringify(favoritePokemons));
                 setIsFavorite(true);
@@ -88,28 +82,18 @@ const DetailPoke = (params) => {
     useEffect(() => {
         getFavoritePoke();
     }, []);
-    
-    //function get pokemon stats from api
-    const getPokemonStats = async () => {
-        try {
-            const response = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
-            const responseJson = await response.json();
-            const pokemonStats = responseJson.flavor_text_entries.find(flavor => flavor.language.name === 'en');
-            return pokemonStats.flavor_text;
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-   
+    // useEffect(() => {
+    //     removeFavoritePoke();
+    // }, []);
 
   return (
     <SafeAreaView style={{
       flex: 1,
       backgroundColor: '#FDEFF4',
-
     }}>
       <StatusBar translucent={true} backgroundColor={'transparent'} barStyle="dark-content" />
+
+      {/* start button like pokemon */}
       <View
         style={{
           height: '5%',
@@ -119,11 +103,14 @@ const DetailPoke = (params) => {
           alignItems: 'center',
           marginTop: 5
         }}>
+        {/* go back home Screen */}
         <TouchableOpacity
           onPress={() => navigation.goBack()}
         >
-          <Ionicons name="ios-chevron-back" size={24} color="black" />
+         <Ionicons name="ios-chevron-back" size={24} color="black" />
         </TouchableOpacity>
+         {/* go back home Screen */}
+         {/* button to set like pokemon */}
         <Text style={{ fontSize: 22, fontWeight: 'bold', letterSpacing: 3 }}>{name}</Text>
         <TouchableOpacity
           onPress={() => {
@@ -142,6 +129,7 @@ const DetailPoke = (params) => {
           }} />
         </TouchableOpacity>
       </View>
+      {/* end button like pokemon */}
       <View style={{
         flex: 1,
         alignItems: 'center',
@@ -171,9 +159,9 @@ const DetailPoke = (params) => {
             flexDirection: 'row', justifyContent: 'space-around',
             marginTop: 10, paddingVertical: 10, marginHorizontal: 4
           }}>
-            <Text style={styles.poketext}>Type: {type} |</Text>
-            <Text style={styles.poketext}>Height: {height} cm |</Text>
-            <Text style={styles.poketext}>Weight: {weight} kg </Text>
+            <Text style={styles.poketext2}>Type: {type} |</Text>
+            <Text style={styles.poketext2}>Height: {height} cm |</Text>
+            <Text style={styles.poketext2}>Weight: {weight} kg </Text>
           </View>
           <View style={{
             alignItems: 'center',
@@ -186,27 +174,26 @@ const DetailPoke = (params) => {
               <Text style={{
                 fontSize: 22,
                 fontWeight: 'bold',
-                marginTop: 20,
+                marginTop: 10,
+                marginBottom :5,
                 textAlign: 'center',
                 color: 'white',
                 letterSpacing: 2
               }}>Pokemon Stats</Text>
-              <View style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                marginTop: 10,
-               flex :1
+              <View style={{        
+               flex :1,
               }}> 
                 {stats.map(stat => (
                   <View key={stat.stat.name} style={{
-                    overflow: 'hidden',
+                    flexDirection: 'row',
                     backgroundColor: '#474F85',
+                    justifyContent: 'space-between',
                     alignItems: 'center',
+                    overflow: 'hidden',
+                  
                   }}>
-               
-                    <Text style={styles.poketext}>{stat.stat.name}</Text>
+                    <Text style={styles.poketext}>{stat.stat.name}:</Text>
                     <Text style={styles.poketext}>{stat.base_stat}</Text>
-                   
                   </View>
                 ))}
               </View>
@@ -218,29 +205,24 @@ const DetailPoke = (params) => {
   );
 }
               
-
-              
-
-
     
 export default DetailPoke
 
 const styles = StyleSheet.create({
   poketext1 :{
     fontSize : 15,
-    fontWeight : '600',
+    fontWeight : '700',
     color : 'white',
     letterSpacing : 1.2
   },
   poketext2 :{
-    fontSize : 20,
-    fontWeight : '600',
+    fontSize : 15,
+    fontWeight : '700',
     color : 'white',
   },
   poketext :{
-    fontSize : 14,
-    fontWeight : '600',
+    fontSize : 15,
+    fontWeight : '500',
     color : 'white',
-    marginHorizontal :2
   }
 })

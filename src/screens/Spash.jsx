@@ -10,7 +10,7 @@ const Spash = () => {
     const navigation = useNavigation();
     setTimeout(() => {
         navigation.replace('Home');
-    }, 2500);
+    }, 2000);
 
   return (
     <View style={{
